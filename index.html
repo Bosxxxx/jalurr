@@ -60,6 +60,12 @@
             animation: glow 2s ease-in-out infinite alternate;
             z-index: 10;
             border: 2px solid #00ff88;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .error-box:hover {
+            transform: scale(1.02);
         }
 
         @keyframes glow {
@@ -67,9 +73,20 @@
             to { box-shadow: 0 0 50px rgba(0, 204, 102, 0.9); }
         }
 
-        .error-box h3 {
+        .register-link {
+            display: block;
+            width: 100%;
+            height: 100%;
+            color: white;
+            text-decoration: none;
             font-size: 1.5rem;
-            margin: 0;
+            font-weight: 600;
+            text-align: center;
+            transition: opacity 0.3s ease;
+        }
+
+        .register-link:hover {
+            opacity: 0.85;
         }
 
         .routes {
@@ -209,7 +226,7 @@
             .subtitle { font-size: 1rem; }
             .diagram { gap: 40px; }
             .error-box { padding: 20px 25px; }
-            .error-box h3 { font-size: 1.2rem; }
+            .register-link { font-size: 1.2rem; }
             .status-box { padding: 15px 25px; font-size: 1rem; }
             .icons { display: none; }
         }
@@ -221,14 +238,15 @@
         <p class="subtitle">Built for scale, resilience, and zero-downtime failover</p>
         
         <div class="diagram">
+            <!-- GANTI LINK DI BAWAH INI DENGAN URL ASLI ANDA -->
             <div class="error-box">
-                <h3>Premine BossX</h3>
+                <a href="https://contoh-link-register-anda.com" target="_blank" class="register-link">register</a>
             </div>
             
             <div class="routes">
                 <div class="route-item">
                     <div class="route-line"></div>
-                    <span class="retry-icon">⟳</span>
+                    <span class="retry-icon"></span>
                     <div class="status-box status-ok">200 OK</div>
                 </div>
                 
@@ -256,7 +274,7 @@
             
             <div class="icons">
                 <div class="icon-item">🛡</div>
-                <div class="icon-item">⬆</div>
+                <div class="icon-item"></div>
                 <div class="icon-item">⚙</div>
             </div>
             
