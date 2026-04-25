@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Routing Intelligence</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a1628 0%, #1a3a52 50%, #0d2137 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #a0c4e8;
+            margin-bottom: 60px;
+            font-weight: 300;
+        }
+
+        .diagram {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 80px;
+            padding: 40px;
+            flex-wrap: wrap;
+        }
+
+        .error-box {
+            background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(255, 68, 68, 0.6);
+            animation: glow 2s ease-in-out infinite alternate;
+            z-index: 10;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 30px rgba(255, 68, 68, 0.6); }
+            to { box-shadow: 0 0 50px rgba(255, 68, 68, 0.9); }
+        }
+
+        .error-box h3 {
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .routes {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            position: relative;
+        }
+
+        .route-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+        }
+
+        .route-line {
+            position: absolute;
+            left: -80px;
+            top: 50%;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #00d9ff, #0099ff);
+            box-shadow: 0 0 10px #00d9ff;
+            transform: translateY(-50%);
+        }
+
+        .route-line::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid #00d9ff;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+
+        .status-box {
+            padding: 20px 35px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            position: relative;
+            z-index: 5;
+        }
+
+        .status-ok {
+            background: linear-gradient(135deg, #00cc66 0%, #009944 100%);
+            box-shadow: 0 0 25px rgba(0, 204, 102, 0.6);
+            border: 2px solid #00ff88;
+        }
+
+        .status-redirect {
+            background: linear-gradient(135deg, #0066ff 0%, #0044cc 100%);
+            box-shadow: 0 0 25px rgba(0, 102, 255, 0.6);
+            border: 2px solid #0099ff;
+        }
+
+        .retry-icon {
+            position: absolute;
+            left: -40px;
+            font-size: 2.5rem;
+            color: #00d9ff;
+            animation: rotate 3s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .icons {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            margin-left: 40px;
+        }
+
+        .icon-item {
+            font-size: 3rem;
+            color: #00d9ff;
+            text-shadow: 0 0 20px rgba(0, 217, 255, 0.8);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .icon-item:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .icon-item:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .checkmarks {
+            position: absolute;
+            right: 100px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+        }
+
+        .check {
+            width: 30px;
+            height: 30px;
+            background: #00cc66;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 0 15px rgba(0, 204, 102, 0.6);
+        }
+
+        .flow-lines {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .subtitle { font-size: 1rem; }
+            .diagram { gap: 40px; }
+            .error-box { padding: 20px 25px; }
+            .error-box h3 { font-size: 1.2rem; }
+            .status-box { padding: 15px 25px; font-size: 1rem; }
+            .icons { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>API Routing Intelligence</h1>
+        <p class="subtitle">Built for scale, resilience, and zero-downtime failover</p>
+        
+        <div class="diagram">
+            <div class="error-box">
+                <h3>429 Too Many Requests</h3>
+            </div>
+            
+            <div class="routes">
+                <div class="route-item">
+                    <div class="route-line"></div>
+                    <span class="retry-icon">⟳</span>
+                    <div class="status-box status-ok">200 OK</div>
+                </div>
+                
+                <div class="route-item">
+                    <div class="route-line"></div>
+                    <span class="retry-icon">⟳</span>
+                    <div class="status-box status-ok">200 OK</div>
+                </div>
+                
+                <div class="route-item">
+                    <div class="route-line"></div>
+                    <div class="status-box status-redirect">302 ✓<br><small>Redirect</small></div>
+                </div>
+            </div>
+            
+            <div class="icons">
+                <div class="icon-item">🛡</div>
+                <div class="icon-item">⬆</div>
+                <div class="icon-item">⚙</div>
+            </div>
+            
+            <div class="checkmarks">
+                <div class="check">✓</div>
+                <div class="check">✓</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
